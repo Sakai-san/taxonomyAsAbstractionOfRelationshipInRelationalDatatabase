@@ -37,7 +37,7 @@ CREATE TABLE `Taxonomy` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-CREATE TABLE IF NOT EXISTS `Content` (
+CREATE TABLE `Content` (
   `content_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `Content` (
   `title` text COLLATE utf8mb4_unicode_ci,
   `parent` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (content_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -53,10 +53,10 @@ INSERT INTO `Content` (`content_id`, `date_gmt`, `text`, `title` ) VALUES
 (1, '2014-06-30 20:22:30', "En informatique il est souvent nécessaire de pratiquer pour d'assimiler les différents concepts. Les exercices suivants couvrent les notions abordées dans la théorie.", 'SQL en pratique'),
 (2, '2014-07-04 11:16:25', "Ce cours est destiné à quiconque s’intéresse au sujet. Il explique les divers concepts d'une manière aussi simple que possible. Aucune connaissance préalable n'est nécessaire.\r\n\r\nSont abordées, dans un premier temps, les notions d'entité, schéma de base de données, table, enregistrement, attribut, clé primaire, association, clé étrangère et typage de données.", 'Apprendre SQL'),
 (3, '2014-10-09 19:27:08', "This course is intended for anyone with an interest in SQL. No prerequisites are needed. Explanations are made as simple as possible.\r\n\r\nFirst, we are going to cover the concepts of entity, database schema, table, record, attribute, primary key, association, foreign key and data type.", 'Learn SQL'),
-(4, '2014-10-09 19:13:20', "The practice plays an important role in understanding the concepts. Doing the following exercises may help the progress in learning SQL. All the studied concepts are covered.", "Let's practice SQL");
+(4, '2014-10-09 19:13:20', "The practice plays an important role in understanding the concepts. Doing the following exercises may help the progress in learning SQL. All the studied concepts are covered.", "Let's practice SQL"),
 (5, '2016-10-09 19:13:20', '', 'Thomas Rubattel'),
-(6, '2015-04-10 08:13:20', '', 'Franz Sturzenegger');
-
+(6, '2015-04-10 08:13:20', '', 'Franz Sturzenegger'),
+(7, '2017-04-24 08:13:20', "1. Qu’est-ce qu’une base de données ? Une base de données est un ensemble de données structurées.", "Chapitre 1 : Introduction");
 
 INSERT INTO `Term` (`term_id`, `name`) VALUES
 (1, 'ENG'),
@@ -64,9 +64,15 @@ INSERT INTO `Term` (`term_id`, `name`) VALUES
 (3, 'FRA'),
 (4, 'DEU'),
 (6, 'Male'),
-(6, 'Female'),
-(7, 'IT'),
-(8, 'Editing');
+(7, 'Female'),
+(8, 'IT'),
+(9, 'Editing'),
+(10, 'SQL'),
+(11, 'Linear Algebra'),
+(12, 'Algèbre linéaire'),
+(13, 'Theory'),
+(14, 'Practice'),
+(15, 'Chapter');
 
 
 INSERT INTO `Taxonomy` (`taxonomy_id`, `term_id`, `taxonomy`, `parent`) VALUES
@@ -78,10 +84,15 @@ INSERT INTO `Taxonomy` (`taxonomy_id`, `term_id`, `taxonomy`, `parent`) VALUES
 (6, (SELECT term_id FROM Term WHERE name = 'DEU'), 'Language' ),
 (7, (SELECT term_id FROM Term WHERE name = 'FRA'), 'Language' ),
 (8, (SELECT term_id FROM Term WHERE name = 'IT'), 'Employee', (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Person' ) ),
-(9, (SELECT term_id FROM Term WHERE name = 'Editing'), 'Employee', (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Person' ) );
+(9, (SELECT term_id FROM Term WHERE name = 'Editing'), 'Employee', (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Person' ) ),
+(10, (SELECT term_id FROM Term WHERE name = 'SQL'), 'Course' ),
+(11, (SELECT term_id FROM Term WHERE name = 'Theory'), 'Course', (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name = 'SQL') ) ),
+(12, (SELECT term_id FROM Term WHERE name = 'Chapter'), 'Course', (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name = 'Theory') ) );
 
 
-INSERT INTO `Relationship` (`content_id`, `taxonomy_id`) VALUES
-((SELECT content_id FROM Content WHERE title = 'SQL en pratique'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy ='Internationalization' AND term_id = (SELECT term_id FROM Term WHERE name='FRA' ) ) ),
-((SELECT content_id FROM Content WHERE title = 'Apprendre SQL'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy ='Internationalization' AND term_id = (SELECT term_id FROM Term WHERE name='FRA' ) ) );
+INSERT INTO `Relationship` (`content_id`, `taxonomy_id`, `term_order`) VALUES
+( (SELECT content_id FROM Content WHERE title = 'Apprendre SQ'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name='SQL' ) ) ),
+( (SELECT content_id FROM Content WHERE title = 'Learn SQL'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name = 'Theory') ) ),
+( (SELECT content_id FROM Content WHERE title = 'SQL en pratique'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Internationalization' AND term_id = (SELECT term_id FROM Term WHERE name='FRA' ) ) ),
+( (SELECT content_id FROM Content WHERE title = 'Chapitre 1 : Introduction'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name='Chapter' ) ), 1 );
 
