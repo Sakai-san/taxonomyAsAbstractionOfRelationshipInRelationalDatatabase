@@ -63,16 +63,16 @@ INSERT INTO `Term` (`term_id`, `name`) VALUES
 (2, 'JPN'),
 (3, 'FRA'),
 (4, 'DEU'),
-(6, 'Male'),
-(7, 'Female'),
-(8, 'IT'),
-(9, 'Editing'),
-(10, 'SQL'),
-(11, 'Linear Algebra'),
-(12, 'Algèbre linéaire'),
-(13, 'Theory'),
-(14, 'Practice'),
-(15, 'Chapter');
+(5, 'Male'),
+(6, 'Female'),
+(7, 'IT'),
+(8, 'Editing'),
+(9, 'SQL'),
+(10, 'Linear Algebra'),
+(11, 'Algèbre linéaire'),
+(12, 'Theory'),
+(13, 'Practice'),
+(14, 'Chapter');
 
 
 INSERT INTO `Taxonomy` (`taxonomy_id`, `term_id`, `taxonomy`, `parent`) VALUES
@@ -91,8 +91,6 @@ INSERT INTO `Taxonomy` (`taxonomy_id`, `term_id`, `taxonomy`, `parent`) VALUES
 
 
 INSERT INTO `Relationship` (`content_id`, `taxonomy_id`, `term_order`) VALUES
-( (SELECT content_id FROM Content WHERE title = 'Apprendre SQ'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name='SQL' ) ) ),
-( (SELECT content_id FROM Content WHERE title = 'Learn SQL'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name = 'Theory') ) ),
-( (SELECT content_id FROM Content WHERE title = 'SQL en pratique'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Internationalization' AND term_id = (SELECT term_id FROM Term WHERE name='FRA' ) ) ),
+( (SELECT content_id FROM Content WHERE title = 'Apprendre SQL'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name='SQL' ) ) ),
 ( (SELECT content_id FROM Content WHERE title = 'Chapitre 1 : Introduction'), (SELECT taxonomy_id FROM Taxonomy WHERE taxonomy = 'Course' AND term_id = (SELECT term_id FROM Term WHERE name='Chapter' ) ), 1 );
 
